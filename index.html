@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>गीता मार्गदर्शन</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            color: #fff;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
+        * {
+            max-width: 100%;
+        }
+
+        /* ===== Background Image (Sharp + Breathing) ===== */
+        .background {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: url("krishna.png") center/cover no-repeat;
+            animation: zoom 18s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes zoom {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.03);
+            }
+        }
+
+        /* ===== Light Sweep (Perspective Friendly) ===== */
+        .energy-sweep {
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(60deg,
+                    transparent 45%,
+                    rgba(255, 170, 0, 0.12) 50%,
+                    transparent 55%);
+            animation: sweep 7s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes sweep {
+            from {
+                transform: translateX(-20%);
+            }
+
+            to {
+                transform: translateX(20%);
+            }
+        }
+
+        /* ===== Subtle Flicker ===== */
+        .flicker {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 150, 0, 0.04);
+            animation: flick 2.5s infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes flick {
+
+            0%,
+            100% {
+                opacity: 0.04;
+            }
+
+            50% {
+                opacity: 0.12;
+            }
+        }
+
+        /* ===== Dark Focus Layer For Readability ===== */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 2;
+        }
+
+        /* ===== Content ===== */
+        .wrapper {
+            position: relative;
+            z-index: 3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at center,
+                    transparent 40%,
+                    rgba(0, 0, 0, 0.65) 100%);
+            z-index: 2;
+        }
+
+        h1 {
+            margin-bottom: 35px;
+            color: #ffcc66;
+        }
+
+        h1,
+        .card,
+        #shlokBox {
+            text-shadow:
+                0 2px 6px rgba(0, 0, 0, 0.8),
+                0 0 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .chakra-glow {
+            position: absolute;
+            top: 26%;
+            /* adjust to match chakra hand position */
+            left: 50%;
+            width: 600px;
+            /* adjust */
+            height: 600px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+
+            background: radial-gradient(circle,
+                    rgba(255, 170, 0, 0.6) 0%,
+                    rgba(255, 140, 0, 0.3) 40%,
+                    transparent 70%);
+
+            transition: background 0.6s ease, filter 0.6s ease;
+            filter: blur(70px);
+            opacity: 0.6;
+        }
+
+        @keyframes glowPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.9);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.9;
+            }
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 18px;
+            width: 100%;
+            max-width: 750px;
+        }
+
+        .card {
+            padding: 16px;
+            border-radius: 16px;
+            backdrop-filter: blur(6px);
+            color: #fff;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.35s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .card.active {
+            box-shadow: 0 0 25px currentColor;
+        }
+
+        /* Soft breathing aura */
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 16px;
+            background: radial-gradient(circle,
+                    rgba(255, 170, 0, 0.35) 0%,
+                    transparent 70%);
+            opacity: 0.4;
+            animation: aura 3s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes aura {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(0.95);
+                opacity: 0.3;
+            }
+        }
+
+        .card:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .card.active::after {
+            content: "";
+            position: absolute;
+            inset: -20px;
+            border-radius: 20px;
+            background: radial-gradient(circle,
+                    rgba(255, 200, 0, 0.5) 0%,
+                    rgba(255, 140, 0, 0.25) 40%,
+                    transparent 70%);
+            z-index: -2;
+            animation: spotlight 0.4s ease-out;
+        }
+
+        /* ===== Modal Background ===== */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s ease;
+        }
+
+        #speakBtn {
+            padding: 10px 22px;
+            border-radius: 25px;
+            background: rgba(255, 174, 0, 0.25);
+            border: 1px solid rgba(255, 174, 0, 0.7);
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s ease;
+        }
+
+        #speakBtn:hover {
+            background: rgba(255, 174, 0, 0.45);
+        }
+
+        /* Active modal */
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Modal Box */
+        .modal-content {
+            background: rgba(15, 15, 15, 0.95);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 650px;
+            max-height: 85vh;
+            /* Important */
+            overflow-y: auto;
+            /* Important */
+            padding: 30px 20px 30px 20px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            box-shadow: 0 0 40px rgba(255, 170, 0, 0.3);
+        }
+
+        /* Verse styling */
+        .verse {
+            line-height: 1.8;
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+
+        /* Controls wrapper */
+        .modal-controls {
+            display: flex;
+            justify-content: center;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 18px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #ffae00;
+        }
+
+        @keyframes spotlight {
+            from {
+                transform: scale(0.6);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        #shlokBox {
+            margin-top: 35px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 174, 0, 0.6);
+            font-size: 20px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: 0.4s;
+        }
+
+        #shlokBox.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ===== Sparks ===== */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+
+        /* ===== Button ===== */
+        button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 4;
+            background: rgba(255, 174, 0, 0.25);
+            border: 1px solid rgba(255, 174, 0, 0.7);
+            color: #ffcc66;
+            padding: 10px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        /* ===== Mobile Adjustments ===== */
+        /* Mobile optimization */
+        @media (max-width:600px) {
+
+            .modal-content {
+                max-height: 88vh;
+                padding: 25px 18px;
+            }
+
+            .verse {
+                font-size: 16px;
+            }
+
+            #speakBtn {
+                font-size: 13px;
+                padding: 8px 18px;
+            }
+        }
+
+        /* भ्रम */
+        .bhram {
+            background: rgba(70, 90, 120, 0.45);
+            border-color: rgba(120, 150, 200, 0.4);
+        }
+
+        /* भय */
+        .bhay {
+            background: rgba(30, 40, 80, 0.55);
+            border-color: rgba(80, 100, 180, 0.5);
+        }
+
+        /* क्रोध */
+        .krodh {
+            background: rgba(160, 60, 40, 0.55);
+            border-color: rgba(255, 120, 60, 0.6);
+        }
+
+        /* अहंकार */
+        .ahankar {
+            background: rgba(80, 40, 110, 0.55);
+            border-color: rgba(160, 90, 200, 0.6);
+        }
+
+        /* आलस्य */
+        .alasya {
+            background: rgba(60, 60, 60, 0.6);
+            border-color: rgba(120, 120, 120, 0.4);
+        }
+
+        /* लोभ */
+        .lobh {
+            background: rgba(140, 110, 30, 0.55);
+            border-color: rgba(220, 190, 80, 0.6);
+        }
+
+        /* कर्तव्य */
+        .kartavya {
+            background: rgba(220, 140, 20, 0.55);
+            border-color: rgba(255, 170, 50, 0.7);
+        }
+
+        /* शांति */
+        .shanti {
+            background: rgba(40, 120, 90, 0.55);
+            border-color: rgba(80, 200, 140, 0.6);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background"></div>
+    <div class="energy-sweep"></div>
+    <div class="flicker"></div>
+    <div class="chakra-glow"></div>
+    <div class="overlay"></div>
+
+    <canvas id="sparks"></canvas>
+
+    <div class="wrapper">
+        <h1>स्थिति चुनें</h1>
+
+        <div class="container">
+            <div class="card bhram" onclick="showShlok('bhram', this)">भ्रम</div>
+            <div class="card bhay" onclick="showShlok('bhay', this)">भय</div>
+            <div class="card krodh" onclick="showShlok('krodh', this)">क्रोध</div>
+            <div class="card ahankar" onclick="showShlok('ahankar', this)">अहंकार</div>
+            <div class="card alasya" onclick="showShlok('alasya', this)">आलस्य</div>
+            <div class="card lobh" onclick="showShlok('lobh', this)">लोभ</div>
+            <div class="card kartavya" onclick="showShlok('kartavya', this)">कर्तव्य</div>
+            <div class="card shanti" onclick="showShlok('shanti', this)">शांति</div>
+            <div class="modal" id="shlokModal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">✕</span>
+
+                    <div id="modalShlok" class="verse"></div>
+
+                    <div class="modal-controls">
+                        <button id="speakBtn" onclick="speakShlok()">🔊 सुनें</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div id="shlokBox"></div> -->
+    </div>
+
+    <audio id="mantra" src="mantra.mp3" loop></audio>
+    <button id="soundToggle">🔔 मंत्र</button>
+
+    <script>
+        console.log("Script Loaded");
+        const chakraGlow = document.querySelector(".chakra-glow");
+        const emotionColors = {
+            bhram: "#4b79a1",
+            bhay: "#243b55",
+            krodh: "#ff512f",
+            ahankar: "#6a0dad",
+            alasya: "#666666",
+            lobh: "#f6e27a",
+            kartavya: "#ff8008",
+            shanti: "#38ef7d"
+        };
+        function hexToRGBA(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r},${g},${b},${alpha})`;
+        }
+        let particleColor = "rgba(255,170,0,0.7)";
+        let targetParticleColor = particleColor;
+        let shlokData = {};
+        let dataLoaded = false;
+        /* ===== Load JSON ===== */
+        async function loadShlokData() {
+            try {
+                const response = await fetch("shlokData.json");
+                if (!response.ok) {
+                    throw new Error("JSON not found");
+                }
+                shlokData = await response.json();
+                dataLoaded = true;
+                console.log("Shlok data loaded");
+            } catch (error) {
+                console.error("Error loading shlok data:", error);
+            }
+        }
+
+        loadShlokData();
+        function showShlok(category, element) {
+
+            if (!shlokData[category] || shlokData[category].length === 0) {
+                return;
+            }
+
+            const list = shlokData[category];
+            const random = list[Math.floor(Math.random() * list.length)];
+
+            // ✅ IMPORTANT: store verse for speech
+            currentVerseText = random.verse;
+
+            // Active card highlight
+            document.querySelectorAll(".card").forEach(card => {
+                card.classList.remove("active");
+            });
+            element.classList.add("active");
+
+            // Set modal text
+            document.getElementById("modalShlok").innerHTML = `
+        <div style="color:#ffcc66; margin-bottom:10px;">
+            अध्याय ${random.ref}
+        </div>
+        <div style="line-height:1.8;">
+            ${random.verse}
+        </div>
+    `;
+
+            // Open modal
+            document.getElementById("shlokModal").classList.add("active");
+
+            // Update visuals
+            targetParticleColor = hexToRGBA(emotionColors[category], 0.6);
+        }
+        /* ===== Close Modal ===== */
+        function closeModal() {
+
+            document.getElementById("shlokModal")
+                .classList.remove("active");
+
+            // Stop narration
+            speechSynthesis.cancel();
+
+            // Stop mantra
+            const mantra = document.getElementById("mantra");
+            mantra.pause();
+            mantra.currentTime = 0;
+        }
+
+        /* Close when clicking outside */
+        document.getElementById("shlokModal")
+            .addEventListener("click", function (e) {
+
+                if (!e.target.closest(".modal-content")) {
+                    closeModal();
+                }
+
+            });
+
+
+        function speakShlok() {
+            speechSynthesis.cancel();
+            document.getElementById("mantra").pause();
+            if (!currentVerseText) return;
+
+            speechSynthesis.cancel();
+
+            const voices = speechSynthesis.getVoices();
+            const selectedVoice =
+                voices.find(v => v.name === "Google हिन्दी") ||
+                voices.find(v => v.lang === "hi-IN");
+
+            // Clean and split text into chunks
+            const chunks = currentVerseText
+                .replace(/\n/g, " ")
+                .split(/।|\.|\?/);   // split at sentence end
+
+            let index = 0;
+
+            function speakNext() {
+
+                if (index >= chunks.length) return;
+
+                const text = chunks[index].trim();
+                if (text.length === 0) {
+                    index++;
+                    speakNext();
+                    return;
+                }
+
+                const utterance = new SpeechSynthesisUtterance(text);
+
+                utterance.voice = selectedVoice;
+                utterance.lang = "hi-IN";
+
+                // Spiritual tuning
+                utterance.rate = 0.95;
+                utterance.pitch = 0.75;
+                utterance.volume = 0.99;
+
+                utterance.onend = () => {
+                    index++;
+                    setTimeout(speakNext, 400); // breathing pause
+                };
+
+                speechSynthesis.speak(utterance);
+            }
+
+            // Slight ceremonial delay
+            setTimeout(speakNext, 300);
+        }
+        /* Sparks */
+        const canvas = document.getElementById("sparks");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let currentVerseText = "";
+
+        let sparks = [];
+        for (let i = 0; i < 60; i++) {
+            sparks.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2,
+                speed: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        document.getElementById("shlokModal").addEventListener("click", function (e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        speechSynthesis.onvoiceschanged = () => {
+            speechSynthesis.getVoices();
+        };
+        const mantra = document.getElementById("mantra");
+        const toggle = document.getElementById("soundToggle");
+
+        toggle.addEventListener("click", () => {
+
+            if (mantra.paused) {
+                mantra.volume = 0;
+                mantra.play().then(() => {
+
+                    let vol = 0;
+                    const fade = setInterval(() => {
+                        if (vol < 0.35) {
+                            vol += 0.02;
+                            mantra.volume = vol;
+                        } else {
+                            clearInterval(fade);
+                        }
+                    }, 120);
+
+                }).catch(err => console.log("Play blocked:", err));
+
+                toggle.innerText = "🔊 मंत्र चालू";
+
+            } else {
+                mantra.pause();
+                toggle.innerText = "🔔 मंत्र";
+            }
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Smooth color transition
+            particleColor = targetParticleColor;
+            ctx.fillStyle = particleColor;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = particleColor;
+            sparks.forEach(s => {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fill();
+                s.y -= s.speed;
+                if (s.y < 0) {
+                    s.y = canvas.height;
+                    s.x = Math.random() * canvas.width;
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+
+</body>
+
+</html>
